@@ -1,0 +1,36 @@
+﻿@page "/post/{postId:int}"
+@using Blog.Client.Services
+@using Blog.Shared.Models
+
+
+
+@if (post == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+<div>
+        <h4>@post.Title</h4>
+        <img src="@post.Image" alt="Post Image" />
+        
+        <p>Author: @post.AuthorFirstName @post.AuthorLastName Date: @post.Date.ToString("yyyy-MM-dd")</p>
+    
+        <p>@post.Content</p>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int PostId { get; set; }
+
+    private PostDTO post;
+
+    [Inject]
+    private IPostService postService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        post = await postService.GetPostById(PostId);
+    }
+}
